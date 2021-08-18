@@ -33,10 +33,9 @@ jobs:
         run: cd SDL2 && ./configure && make -j4
 
       - name: Build SDL2_ttf dependency
-        env:
-          SDL2_CONFIG: SDL2/sdl2-config
         run: |
-          export SDL2_CONFIG=./SDL2/sdl2-config
+          export SDL2_CONFIG="./SDL2/sdl2-config"
+          echo $SDL2_CONFIG
           cd SDL2_ttf && ./configure && cd .. && mkdir build && cd build && cmake ../SDL2_ttf && make -j4
 
       - name: Build
