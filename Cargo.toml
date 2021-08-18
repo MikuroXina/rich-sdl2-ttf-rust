@@ -1,0 +1,13 @@
+[package]
+name = "rich-sdl2-ttf-rust"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rich-sdl2-rust = "0.4.2"
+static_assertions = "1.1.0"
+
+[build-dependencies]
+bindgen = "0.59.1"
