@@ -30,13 +30,14 @@ jobs:
           args: --all-features
 
       - name: Build SDL2 dependency
-        run: cd SDL2 && ./configure && make -j4 && cd ..
+        run: cd SDL2 && ./configure && make -j4
 
       - name: Build SDL2_ttf dependency
         env:
-          C_INCLUDE_PATH: $C_INCLUDE_PATH:SDL2/include
-          LIBRARY_PATH: $LIBRARY_PATH:SDL2/build/.libs
-        run: cd SDL2_ttf && ./configure && cd .. && mkdir build && cd build && cmake ../SDL2_ttf && make -j4 && cd ..
+          SDL2_CONFIG: SDL2/sdl2-config
+        run: |
+          export SDL2_CONFIG=./SDL2/sdl2-config
+          cd SDL2_ttf && ./configure && cd .. && mkdir build && cd build && cmake ../SDL2_ttf && make -j4
 
       - name: Build
         run: cargo build --verbose
