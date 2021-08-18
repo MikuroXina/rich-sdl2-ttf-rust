@@ -35,8 +35,7 @@ jobs:
       - name: Build SDL2_ttf dependency
         run: |
           export SDL2_CONFIG="`pwd`/SDL2/sdl2-config"
-          mv SDL2_ttf/ SDL2/SDL2_ttf/
-          cd SDL2/SDL2_ttf && ./configure && cd ../build && cmake ../SDL2_ttf && make -j4
+          cd SDL2_ttf && ./configure && cd .. && mkdir build && cd build && cmake ../SDL2_ttf && make -j4
 
       - name: Build
         run: cargo build --verbose
