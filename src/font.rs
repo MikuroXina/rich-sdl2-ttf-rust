@@ -5,8 +5,10 @@ use std::{ffi::CString, marker::PhantomData, ptr::NonNull};
 
 use crate::{bind, Ttf};
 
+pub use setting::*;
 pub use style::*;
 
+mod setting;
 mod style;
 
 /// A font data structure.
