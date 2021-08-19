@@ -38,7 +38,7 @@ jobs:
         run: |
           export PREFIX=`pwd`
           export SDL2_DIR=`pwd`/SDL2
-          cd SDL2_ttf && ./configure --prefix=$PREFIX && mkdir build && cd build && cmake .. && make -j4 && make install
+          cd SDL2_ttf && ./configure --prefix=$PREFIX && make -j4 && make install
 
       - name: Build
         run: cargo build --verbose
