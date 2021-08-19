@@ -72,6 +72,7 @@ impl StyleExt for Font<'_> {
     }
 
     fn set_outline_width(&self, pixels: u32) {
+        // needed to check to prevent cache from erasing.
         if pixels != self.outline_width() {
             unsafe { bind::TTF_SetFontOutline(self.ptr.as_ptr(), pixels as _) }
         }
