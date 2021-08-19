@@ -9,6 +9,10 @@ fn main() {
         "cargo:rustc-link-search={}",
         root.join("SDL2_ttf/.libs").as_path().to_string_lossy()
     );
+    println!(
+        "cargo:rustc-link-search={}",
+        root.join("lib").as_path().to_string_lossy()
+    );
     println!("cargo:rerun-if-changed=wrapper.h");
 
     let bindings = bindgen::Builder::default()
