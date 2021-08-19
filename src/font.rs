@@ -1,10 +1,13 @@
 //! Font data managers.
 
+use rich_sdl2_rust::{Result, Sdl, SdlError};
 use std::{ffi::CString, marker::PhantomData, ptr::NonNull};
 
-use rich_sdl2_rust::{Result, Sdl, SdlError};
-
 use crate::{bind, Ttf};
+
+pub use style::*;
+
+mod style;
 
 /// A font data structure.
 pub struct Font<'ttf> {
