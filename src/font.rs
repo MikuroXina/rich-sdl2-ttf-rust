@@ -10,7 +10,10 @@ pub use metric::*;
 pub use setting::*;
 pub use style::*;
 
+use self::glyph::Glyph;
+
 mod attribute;
+pub mod glyph;
 mod metric;
 mod setting;
 mod style;
@@ -41,6 +44,11 @@ impl<'ttf> Font<'ttf> {
                 _phantom: PhantomData,
             })
         }
+    }
+
+    /// Returns the glyph of the font if exists.
+    pub fn glyph(&self, ch: char) -> Option<Glyph> {
+        Glyph::new(self, ch)
     }
 }
 
