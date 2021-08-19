@@ -1,6 +1,6 @@
 //! Font data managers.
 
-use rich_sdl2_rust::{Result, Sdl, SdlError};
+use rich_sdl2_rust::{geo::Size, Result, Sdl, SdlError};
 use std::{ffi::CString, marker::PhantomData, ptr::NonNull};
 
 use crate::{bind, Ttf};
@@ -49,6 +49,29 @@ impl<'ttf> Font<'ttf> {
     /// Returns the glyph of the font if exists.
     pub fn glyph(&self, ch: char) -> Option<Glyph> {
         Glyph::new(self, ch)
+    }
+
+    /// Calculates the rendered size of the text, or `Err` on failure. The height will be same as [`MetricExt::height`].
+    pub fn rendered_size(&self, text: &str) -> Result<Size> {
+        let cstr = CString::new(text).unwrap_or_default();
+        let mut width = 0;
+        let mut height = 0;
+        let ret = unsafe {
+            bind::TTF_SizeUTF8(
+                self.ptr.as_ptr(),
+                cstr.as_ptr(),
+                &mut width as *mut _,
+                &mut height as *mut _,
+            )
+        };
+        if ret != 0 {
+            Err(SdlError::Others { msg: Sdl::error() })
+        } else {
+            Ok(Size {
+                width: width as _,
+                height: height as _,
+            })
+        }
     }
 }
 
