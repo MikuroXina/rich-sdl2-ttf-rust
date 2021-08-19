@@ -5,10 +5,12 @@ use std::{ffi::CString, marker::PhantomData, ptr::NonNull};
 
 use crate::{bind, Ttf};
 
+pub use attribute::*;
 pub use metric::*;
 pub use setting::*;
 pub use style::*;
 
+mod attribute;
 mod metric;
 mod setting;
 mod style;
