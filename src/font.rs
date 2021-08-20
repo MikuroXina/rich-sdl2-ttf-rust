@@ -102,7 +102,7 @@ impl<'ttf> Font<'ttf> {
         if ret != 0 {
             Err(SdlError::OutOfMemory)
         } else {
-            Ok((actual_width, count))
+            Ok((actual_width as _, count as _))
         }
     }
 }

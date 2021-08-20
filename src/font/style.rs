@@ -1,7 +1,5 @@
 use std::os::raw::c_int;
 
-use rich_sdl2_rust::SdlError;
-
 use super::{Dpi, Font};
 use crate::bind;
 

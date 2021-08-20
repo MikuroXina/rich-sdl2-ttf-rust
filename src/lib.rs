@@ -4,9 +4,9 @@
 
 #![warn(missing_docs)]
 
-use rich_sdl2_rust::{Sdl, SdlVersion};
+use rich_sdl2_rust::{Result, Sdl, SdlError, SdlVersion};
 use static_assertions::assert_not_impl_all;
-use std::{cell::Cell, marker::PhantomData};
+use std::{cell::Cell, marker::PhantomData, os::raw::c_int};
 
 mod bind;
 pub mod font;

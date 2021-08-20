@@ -1,12 +1,12 @@
 //! Data type for scripts. The four-letter values defined by ISO 15924.
 
+use rich_sdl2_rust::{Result, SdlError};
 use std::os::raw::c_int;
-
-use rich_sdl2_rust::SdlError;
 
 use crate::bind;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[allow(missing_docs)]
 pub enum Script {
     Common,
     Inherited,
@@ -329,7 +329,7 @@ impl Script {
             KhitanSmallScript => b"Kits",
             Yezidi => b"Yezi",
         };
-        c_int::from_be_bytes(code)
+        c_int::from_be_bytes(*code)
     }
 }
 

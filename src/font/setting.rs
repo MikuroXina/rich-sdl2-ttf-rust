@@ -1,6 +1,6 @@
 use std::os::raw::c_int;
 
-use rich_sdl2_rust::SdlError;
+use rich_sdl2_rust::{Result, SdlError};
 
 use super::Font;
 use crate::bind;
