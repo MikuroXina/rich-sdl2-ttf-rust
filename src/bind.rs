@@ -1222,6 +1222,9 @@ fn bindgen_test_layout_SDL_Surface() {
         )
     );
 }
+extern "C" {
+    pub fn SDL_FreeSurface(surface: *mut SDL_Surface);
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct SDL_version {

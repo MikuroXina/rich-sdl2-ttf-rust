@@ -1865,6 +1865,62 @@ D3D11_QueueCopyEx(SDL_Renderer * renderer, SDL_RenderCommand *cmd, SDL_Texture *
     return 0;
 }
 
+#if SDL_HAVE_RENDER_GEOMETRY
+static int
+D3D11_QueueGeometry(SDL_Renderer *renderer, SDL_RenderCommand *cmd, SDL_Texture *texture,
+                    const float *xy, int xy_stride, const int *color, int color_stride, const float *uv, int uv_stride,
+                    int num_vertices, const void *indices, int num_indices, int size_indices,
+                    float scale_x, float scale_y)
+{
+    int i;
+    int count = indices ? num_indices : num_vertices;
+    VertexPositionColor *verts = (VertexPositionColor *) SDL_AllocateRenderVertices(renderer, count * sizeof (VertexPositionColor), 0, &cmd->data.draw.first);
+
+    if (!verts) {
+        return -1;
+    }
+
+    cmd->data.draw.count = count;
+
+    for (i = 0; i < count; i++) {
+        int j;
+        float *xy_;
+        SDL_Color col_;
+        if (size_indices == 4) {
+            j = ((const Uint32 *)indices)[i];
+        } else if (size_indices == 2) {
+            j = ((const Uint16 *)indices)[i];
+        } else if (size_indices == 1) {
+            j = ((const Uint8 *)indices)[i];
+        } else {
+            j = i;
+        }
+
+        xy_ = (float *)((char*)xy + j * xy_stride);
+        col_ = *(SDL_Color *)((char*)color + j * color_stride);
+
+        verts->pos.x = xy_[0] * scale_x;
+        verts->pos.y = xy_[1] * scale_y;
+        verts->pos.z = 0.0f;
+        verts->color.x = col_.r / 255.0f;
+        verts->color.y = col_.g / 255.0f;
+        verts->color.z = col_.b / 255.0f;
+        verts->color.w = col_.a / 255.0f;
+
+        if (texture) {
+            float *uv_ = (float *)((char*)uv + j * uv_stride);
+            verts->tex.x = uv_[0];
+            verts->tex.y = uv_[1];
+        } else {
+            verts->tex.x = 0.0f;
+            verts->tex.y = 0.0f;
+        }
+
+        verts += 1;
+    }
+    return 0;
+}
+#endif
 
 static int
 D3D11_UpdateVertexBuffer(SDL_Renderer *renderer,
@@ -2347,6 +2403,24 @@ D3D11_RunCommandQueue(SDL_Renderer * renderer, SDL_RenderCommand *cmd, void *ver
                 break;
             }
 
+            case SDL_RENDERCMD_GEOMETRY: {
+#if SDL_HAVE_RENDER_GEOMETRY
+                SDL_Texture *texture = cmd->data.draw.texture;
+                const size_t count = cmd->data.draw.count;
+                const size_t first = cmd->data.draw.first;
+                const size_t start = first / sizeof (VertexPositionColor);
+
+                if (texture) {
+                    D3D11_SetCopyState(renderer, cmd, NULL);
+                } else {
+                    D3D11_SetDrawState(renderer, cmd, rendererData->pixelShaders[SHADER_SOLID], 0, NULL, NULL, NULL);
+                }
+
+                D3D11_DrawPrimitives(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, start, count);
+#endif
+                break;
+            }
+
             case SDL_RENDERCMD_NO_OP:
                 break;
         }
@@ -2562,6 +2636,9 @@ D3D11_CreateRenderer(SDL_Window * window, Uint32 flags)
     renderer->QueueFillRects = D3D11_QueueFillRects;
     renderer->QueueCopy = D3D11_QueueCopy;
     renderer->QueueCopyEx = D3D11_QueueCopyEx;
+#if SDL_HAVE_RENDER_GEOMETRY
+    renderer->QueueGeometry = D3D11_QueueGeometry;
+#endif
     renderer->RunCommandQueue = D3D11_RunCommandQueue;
     renderer->RenderReadPixels = D3D11_RenderReadPixels;
     renderer->RenderPresent = D3D11_RenderPresent;

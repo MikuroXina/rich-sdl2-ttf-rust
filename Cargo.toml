@@ -1,7 +1,14 @@
 [package]
 name = "rich-sdl2-ttf-rust"
 version = "0.1.0"
+authors = ["MikuroXina <ryosukadnak@gmail.com>"]
 edition = "2018"
+description = "The sdl_ttf 2.0 wrapper for Rust."
+repository = "https://github.com/MikuroXina/rich-sdl2-ttf-rust"
+documentation = "https://mikuroxina.github.io/rich-sdl2-ttf-rust/rich_sdl2_ttf_rust/"
+license = "Apache-2.0"
+keywords = ["sdl2", "wrapper", "binding"]
+categories = ["graphics", "rendering"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

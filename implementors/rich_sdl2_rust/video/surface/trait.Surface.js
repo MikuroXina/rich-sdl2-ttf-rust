@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["rich_sdl2_ttf_rust"] = [{"text":"impl Surface for <a class=\"struct\" href=\"rich_sdl2_ttf_rust/font/struct.TtfSurface.html\" title=\"struct rich_sdl2_ttf_rust::font::TtfSurface\">TtfSurface</a>","synthetic":false,"types":["rich_sdl2_ttf_rust::font::render::TtfSurface"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

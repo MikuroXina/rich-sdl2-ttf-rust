@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Glyph","A glyph in a font."]]});
