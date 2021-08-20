@@ -32,7 +32,7 @@ jobs:
       - name: Build SDL2 dependency
         run: |
           export PREFIX=`pwd`
-          mkdir lib && mkdir include && mkdir bin && cd SDL2 && ./configure --prefix=$PREFIX --enable-loadso && make -j4 && make install
+          mkdir lib && mkdir include && mkdir bin && cd SDL2 && ./configure --prefix=$PREFIX && make -j4 && make install
 
       - name: Build SDL2_ttf dependency
         run: |
