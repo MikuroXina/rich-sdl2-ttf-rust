@@ -1,5 +1,7 @@
 use std::os::raw::c_int;
 
+use rich_sdl2_rust::SdlError;
+
 use super::Font;
 use crate::bind;
 
@@ -59,6 +61,11 @@ pub trait FontSetting {
 
     /// Disables the font kerning.
     fn disable_kerning(&self) -> KerningDisabler;
+
+    /// Returns whether the font supports Singed Distance Field.
+    fn is_sdf(&self) -> bool;
+    /// Sets whether the font supports Singed Distance Field.
+    fn set_sdf(&self, value: bool) -> Result<()>;
 }
 
 impl FontSetting for Font<'_> {
@@ -77,5 +84,29 @@ impl FontSetting for Font<'_> {
     fn disable_kerning(&self) -> KerningDisabler {
         unsafe { bind::TTF_SetFontKerning(self.ptr.as_ptr(), 1) }
         KerningDisabler(self)
+    }
+
+    fn is_sdf(&self) -> bool {
+        unsafe { bind::TTF_GetFontSDF(self.ptr.as_ptr()) == bind::SDL_bool_SDL_TRUE }
+    }
+
+    fn set_sdf(&self, value: bool) -> Result<()> {
+        // needed to check to prevent cache from erasing.
+        if value != self.is_sdf() {
+            let ret = unsafe {
+                bind::TTF_SetFontSDF(
+                    self.ptr.as_ptr(),
+                    if value {
+                        bind::SDL_bool_SDL_TRUE
+                    } else {
+                        bind::SDL_bool_SDL_FALSE
+                    },
+                )
+            };
+            if ret == -1 {
+                return Err(SdlError::UnsupportedFeature);
+            }
+        }
+        Ok(())
     }
 }
