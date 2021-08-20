@@ -1,8 +1,15 @@
 fn main() {
+    use git2::Repository;
     use std::env;
     use std::path::PathBuf;
 
+    const SDL_REPO: &str = "https://github.com/libsdl-org/SDL";
+    const SDL_TTF_REPO: &str = "https://github.com/libsdl-org/SDL_ttf";
+
     let root = PathBuf::from(env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not found"));
+
+    Repository::clone(SDL_REPO, "SDL2").expect("cloning SDL repository failed");
+    Repository::clone(SDL_TTF_REPO, "SDL2_ttf").expect("cloning SDL repository failed");
 
     println!("cargo:rustc-link-lib=SDL2");
     println!("cargo:rustc-link-lib=SDL2_ttf");
