@@ -4,12 +4,13 @@
 
 #![warn(missing_docs)]
 
-use rich_sdl2_rust::{Sdl, SdlVersion};
+use rich_sdl2_rust::{Result, Sdl, SdlError, SdlVersion};
 use static_assertions::assert_not_impl_all;
-use std::{cell::Cell, marker::PhantomData};
+use std::{cell::Cell, marker::PhantomData, os::raw::c_int};
 
 mod bind;
 pub mod font;
+pub mod script;
 
 /// A root SDL2_ttf controller.
 #[derive(Debug)]
@@ -51,5 +52,39 @@ impl Drop for Ttf {
 impl Default for Ttf {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+/// A direction of a text segment.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Direction {
+    /// A writing from left to right.
+    Ltr,
+    /// A writing from right to left.
+    Rtl,
+    /// A writing from top to bottom.
+    Ttb,
+    /// A writing from bottom to top.
+    Btt,
+}
+
+impl Direction {
+    fn into_raw(self) -> c_int {
+        match self {
+            Direction::Ltr => 4,
+            Direction::Rtl => 5,
+            Direction::Ttb => 6,
+            Direction::Btt => 7,
+        }
+    }
+}
+
+/// Sets the direction of a text segment.
+pub fn set_direction(dir: Direction) -> Result<()> {
+    let ret = unsafe { bind::TTF_SetDirection(dir.into_raw()) };
+    if ret != 0 {
+        Err(SdlError::UnsupportedFeature)
+    } else {
+        Ok(())
     }
 }

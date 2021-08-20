@@ -35,6 +35,8 @@ pub enum RenderMode {
 pub trait RenderExt {
     /// Renders the text into the [`TtfSurface`], or `Err` on failure.
     fn render(&self, text: &str, mode: RenderMode) -> Result<TtfSurface>;
+    /// Renders the wrapped text into the [`TtfSurface`], or `Err` on failure.
+    fn render_wrapped(&self, text: &str, wrap_length: u32, mode: RenderMode) -> Result<TtfSurface>;
     /// Renders the character into the [`TtfSurface`], or `Err` on failure.
     fn render_glyph(&self, ch: char, mode: RenderMode) -> Result<TtfSurface>;
 }
@@ -68,6 +70,53 @@ impl RenderExt for Font<'_> {
                     self.ptr.as_ptr(),
                     cstr.as_ptr(),
                     raw_color(foreground),
+                )
+            },
+        };
+        if ptr.is_null() {
+            Err(SdlError::Others { msg: Sdl::error() })
+        } else {
+            Ok(TtfSurface {
+                ptr: NonNull::new(ptr.cast()).unwrap(),
+            })
+        }
+    }
+
+    fn render_wrapped(&self, text: &str, wrap_length: u32, mode: RenderMode) -> Result<TtfSurface> {
+        let cstr = CString::new(text).unwrap_or_default();
+        let raw_color = |color: Rgba| bind::SDL_Color {
+            r: color.r,
+            g: color.g,
+            b: color.b,
+            a: color.a,
+        };
+        let ptr = match mode {
+            RenderMode::Solid { foreground } => unsafe {
+                bind::TTF_RenderUTF8_Solid_Wrapped(
+                    self.ptr.as_ptr(),
+                    cstr.as_ptr(),
+                    raw_color(foreground),
+                    wrap_length,
+                )
+            },
+            RenderMode::Shaded {
+                foreground,
+                background,
+            } => unsafe {
+                bind::TTF_RenderUTF8_Shaded_Wrapped(
+                    self.ptr.as_ptr(),
+                    cstr.as_ptr(),
+                    raw_color(foreground),
+                    raw_color(background),
+                    wrap_length,
+                )
+            },
+            RenderMode::Blended { foreground } => unsafe {
+                bind::TTF_RenderUTF8_Blended_Wrapped(
+                    self.ptr.as_ptr(),
+                    cstr.as_ptr(),
+                    raw_color(foreground),
+                    wrap_length,
                 )
             },
         };

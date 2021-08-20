@@ -1,6 +1,6 @@
 use std::os::raw::c_int;
 
-use super::Font;
+use super::{Dpi, Font};
 use crate::bind;
 
 /// A text style of a font.
@@ -52,6 +52,11 @@ pub trait StyleExt {
     fn outline_width(&self) -> u32;
     /// Sets the outline width in pixels.
     fn set_outline_width(&self, pixels: u32);
+
+    /// Sets the font size in points.
+    fn set_font_size(&self, points: u32);
+    /// Sets the font size in points, and dpi.
+    fn set_font_size_dpi(&self, points: u32, dpi: Dpi);
 }
 
 impl StyleExt for Font<'_> {
@@ -76,5 +81,20 @@ impl StyleExt for Font<'_> {
         if pixels != self.outline_width() {
             unsafe { bind::TTF_SetFontOutline(self.ptr.as_ptr(), pixels as _) }
         }
+    }
+
+    fn set_font_size(&self, points: u32) {
+        let _ = unsafe { bind::TTF_SetFontSize(self.ptr.as_ptr(), points as _) };
+    }
+
+    fn set_font_size_dpi(&self, points: u32, dpi: Dpi) {
+        let _ = unsafe {
+            bind::TTF_SetFontSizeDPI(
+                self.ptr.as_ptr(),
+                points as _,
+                dpi.horizontal as _,
+                dpi.vertical as _,
+            )
+        };
     }
 }
