@@ -20,6 +20,15 @@ mod render;
 mod setting;
 mod style;
 
+/// A pixel density per inch.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Dpi {
+    /// A horizontal DPI.
+    pub horizontal: u32,
+    /// A vertical DPI.
+    pub vertical: u32,
+}
+
 /// A font data structure.
 pub struct Font<'ttf> {
     ptr: NonNull<bind::TTF_Font>,
