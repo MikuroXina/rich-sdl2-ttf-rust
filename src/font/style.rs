@@ -1,5 +1,7 @@
 use std::os::raw::c_int;
 
+use rich_sdl2_rust::SdlError;
+
 use super::{Dpi, Font};
 use crate::bind;
 
@@ -41,6 +43,30 @@ impl FontStyle {
     }
 }
 
+/// A direction of a text segment.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Direction {
+    /// A writing from left to right.
+    Ltr,
+    /// A writing from right to left.
+    Rtl,
+    /// A writing from top to bottom.
+    Ttb,
+    /// A writing from bottom to top.
+    Btt,
+}
+
+impl Direction {
+    fn into_raw(self) -> c_int {
+        match self {
+            Direction::Ltr => 4,
+            Direction::Rtl => 5,
+            Direction::Ttb => 6,
+            Direction::Btt => 7,
+        }
+    }
+}
+
 /// An extension of [`FontStyle`] and outline width getters/setters.
 pub trait StyleExt {
     /// Returns the current font style.
@@ -57,6 +83,9 @@ pub trait StyleExt {
     fn set_font_size(&self, points: u32);
     /// Sets the font size in points, and dpi.
     fn set_font_size_dpi(&self, points: u32, dpi: Dpi);
+
+    /// Sets the direction of a text segment, or `Err` on not supported.
+    fn set_direction(&self, dir: Direction) -> Result<()>;
 }
 
 impl StyleExt for Font<'_> {
@@ -96,5 +125,14 @@ impl StyleExt for Font<'_> {
                 dpi.vertical as _,
             )
         };
+    }
+
+    fn set_direction(&self, dir: Direction) -> Result<()> {
+        let ret = unsafe { bind::TTF_SetDirection(dir.into_raw()) };
+        if ret != 0 {
+            Err(SdlError::UnsupportedFeature)
+        } else {
+            Ok(())
+        }
     }
 }
