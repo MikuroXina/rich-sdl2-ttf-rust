@@ -22,7 +22,6 @@ fn main() {
 
     let bindings = bindgen::Builder::default()
         .header("wrapper.h")
-        .clang_arg("-ISDL2/include")
         .allowlist_function("TTF_.*")
         .allowlist_function("SDL_FreeSurface")
         .allowlist_type("TTF_.*")
