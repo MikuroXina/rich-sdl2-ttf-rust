@@ -52,6 +52,9 @@ pub trait StyleExt {
     fn outline_width(&self) -> u32;
     /// Sets the outline width in pixels.
     fn set_outline_width(&self, pixels: u32);
+
+    /// Sets the font size in points.
+    fn set_font_size(&self, points: u32);
 }
 
 impl StyleExt for Font<'_> {
@@ -76,5 +79,9 @@ impl StyleExt for Font<'_> {
         if pixels != self.outline_width() {
             unsafe { bind::TTF_SetFontOutline(self.ptr.as_ptr(), pixels as _) }
         }
+    }
+
+    fn set_font_size(&self, points: u32) {
+        let _ = unsafe { bind::TTF_SetFontSize(self.ptr.as_ptr(), points as _) };
     }
 }
