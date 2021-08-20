@@ -10,6 +10,7 @@ use std::{cell::Cell, marker::PhantomData};
 
 mod bind;
 pub mod font;
+pub mod script;
 
 /// A root SDL2_ttf controller.
 #[derive(Debug)]
