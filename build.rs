@@ -1,6 +1,10 @@
 fn main() {
+    use git2::Repository;
     use std::env;
     use std::path::PathBuf;
+
+    let _ = Repository::clone("https://github.com/libsdl-org/SDL", "SDL2");
+    let _ = Repository::clone("https://github.com/libsdl-org/SDL_ttf", "SDL2_ttf");
 
     let root = PathBuf::from(env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not found"));
 

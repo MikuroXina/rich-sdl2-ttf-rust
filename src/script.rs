@@ -331,14 +331,14 @@ impl Script {
         };
         c_int::from_be_bytes(*code)
     }
-}
 
-/// Sets the script of the font, or `Err` on not supported.
-pub fn set_script(script: Script) -> Result<()> {
-    let ret = unsafe { bind::TTF_SetScript(script.into_raw()) };
-    if ret != 0 {
-        Err(SdlError::UnsupportedFeature)
-    } else {
-        Ok(())
+    /// Sets the script of the font, or `Err` on not supported.
+    pub fn set(self) -> Result<()> {
+        let ret = unsafe { bind::TTF_SetScript(self.into_raw()) };
+        if ret != 0 {
+            Err(SdlError::UnsupportedFeature)
+        } else {
+            Ok(())
+        }
     }
 }

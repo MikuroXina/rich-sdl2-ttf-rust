@@ -77,14 +77,14 @@ impl Direction {
             Direction::Btt => 7,
         }
     }
-}
 
-/// Sets the direction of a text segment.
-pub fn set_direction(dir: Direction) -> Result<()> {
-    let ret = unsafe { bind::TTF_SetDirection(dir.into_raw()) };
-    if ret != 0 {
-        Err(SdlError::UnsupportedFeature)
-    } else {
-        Ok(())
+    /// Sets the direction of a text segment.
+    pub fn set_direction(self) -> Result<()> {
+        let ret = unsafe { bind::TTF_SetDirection(self.into_raw()) };
+        if ret != 0 {
+            Err(SdlError::UnsupportedFeature)
+        } else {
+            Ok(())
+        }
     }
 }

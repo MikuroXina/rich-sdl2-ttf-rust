@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Direction","A direction of a text segment."]],"fn":[["set_direction","Sets the direction of a text segment."]],"mod":[["font","Font data managers."],["script","Data type for scripts. The four-letter values defined by ISO 15924."]],"struct":[["Ttf","A root SDL2_ttf controller."]]});
+initSidebarItems({"enum":[["Direction","A direction of a text segment."]],"mod":[["font","Font data managers."],["script","Data type for scripts. The four-letter values defined by ISO 15924."]],"struct":[["Ttf","A root SDL2_ttf controller."]]});

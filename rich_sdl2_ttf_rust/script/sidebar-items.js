@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Script",""]],"fn":[["set_script","Sets the script of the font, or `Err` on not supported."]]});
+initSidebarItems({"enum":[["Script",""]]});
