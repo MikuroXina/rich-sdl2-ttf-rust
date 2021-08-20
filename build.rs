@@ -3,6 +3,7 @@ fn main() {
     use std::env;
     use std::path::PathBuf;
 
+    let _ = Repository::clone("https://github.com/libsdl-org/SDL", "SDL2");
     let _ = Repository::clone("https://github.com/libsdl-org/SDL_ttf", "SDL2_ttf");
 
     let root = PathBuf::from(env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not found"));
@@ -25,6 +26,7 @@ fn main() {
 
     let bindings = bindgen::Builder::default()
         .header("wrapper.h")
+        .clang_arg("-ISDL2/include")
         .clang_arg("-DCARGO_BUILD")
         .allowlist_function("TTF_.*")
         .allowlist_function("SDL_FreeSurface")
