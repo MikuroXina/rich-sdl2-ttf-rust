@@ -8,6 +8,10 @@ fn main() {
     println!("cargo:rustc-link-lib=SDL2_ttf");
     println!(
         "cargo:rustc-link-search={}",
+        root.join("SDL2/.libs").as_path().to_string_lossy()
+    );
+    println!(
+        "cargo:rustc-link-search={}",
         root.join("SDL2_ttf/.libs").as_path().to_string_lossy()
     );
     println!(
