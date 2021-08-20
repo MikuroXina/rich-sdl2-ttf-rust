@@ -1,6 +1,0 @@
-[submodule "SDL2_ttf"]
-	path = SDL2_ttf
-	url = https://github.com/libsdl-org/SDL_ttf
-[submodule "SDL2"]
-	path = SDL2
-	url = https://github.com/libsdl-org/SDL
