@@ -7,6 +7,7 @@ use crate::{bind, Ttf};
 
 pub use attribute::*;
 pub use metric::*;
+pub use render::*;
 pub use setting::*;
 pub use style::*;
 
@@ -15,6 +16,7 @@ use self::glyph::Glyph;
 mod attribute;
 pub mod glyph;
 mod metric;
+mod render;
 mod setting;
 mod style;
 

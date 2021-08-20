@@ -19,6 +19,7 @@ fn main() {
         .header("wrapper.h")
         .clang_arg("-ISDL2/include")
         .allowlist_function("TTF_.*")
+        .allowlist_function("SDL_FreeSurface")
         .allowlist_type("TTF_.*")
         .allowlist_var("TTF_.*")
         .generate_comments(false)
