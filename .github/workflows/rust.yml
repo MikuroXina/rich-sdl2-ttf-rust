@@ -14,7 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
+          repository: https://github.com/libsdl-org/SDL
+          path: SDL2
+          submodules: recursive
+      - uses: actions/checkout@v2
+        with:
+          repository: https://github.com/libsdl-org/SDL_ttf
+          path: SDL2_ttf
           submodules: recursive
       - name: Stable with rustfmt and clippy
         uses: actions-rs/toolchain@v1
