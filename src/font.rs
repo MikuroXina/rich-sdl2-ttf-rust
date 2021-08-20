@@ -75,6 +75,27 @@ impl<'ttf> Font<'ttf> {
             })
         }
     }
+
+    /// Returns the rendered width in pixels and the numbers of characters until reaching `expected_width`. `Err` will be returned on out of memory.
+    pub fn rendered_width(&self, text: &str, expected_width: u32) -> Result<(u32, usize)> {
+        let cstr = CString::new(text).unwrap_or_default();
+        let mut actual_width = 0;
+        let mut count = 0;
+        let ret = unsafe {
+            bind::TTF_MeasureUTF8(
+                self.ptr.as_ptr(),
+                cstr.as_ptr(),
+                expected_width as _,
+                &mut actual_width as *mut _,
+                &mut count as *mut _,
+            )
+        };
+        if ret != 0 {
+            Err(SdlError::OutOfMemory)
+        } else {
+            Ok((actual_width, count))
+        }
+    }
 }
 
 impl Drop for Font<'_> {
