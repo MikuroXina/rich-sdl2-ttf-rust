@@ -4,6 +4,7 @@ fn main() {
 
     let root = PathBuf::from(env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not found"));
 
+    println!("cargo:rustc-link-lib=SDL2");
     println!("cargo:rustc-link-lib=SDL2_ttf");
     println!(
         "cargo:rustc-link-search={}",
