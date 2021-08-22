@@ -9,6 +9,8 @@ use rich_sdl2_rust::{
 use super::Font;
 use crate::bind;
 
+pub mod pen;
+
 /// A render mode for the font glyphs.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum RenderMode {

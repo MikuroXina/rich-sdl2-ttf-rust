@@ -1,0 +1,1 @@
+initSidebarItems({"trait":[["FontRenderExt","An extension for [`Pen`] to render a text."]]});
