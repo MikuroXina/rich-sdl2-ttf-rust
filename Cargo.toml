@@ -1,6 +1,6 @@
 [package]
 name = "rich-sdl2-ttf-rust"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["MikuroXina <ryosukadnak@gmail.com>"]
 edition = "2018"
 description = "The sdl_ttf 2.0 wrapper for Rust."
