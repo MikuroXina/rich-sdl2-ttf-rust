@@ -125,6 +125,9 @@ pub trait FontRenderExt {
 
 impl FontRenderExt for Pen<'_> {
     fn text(&self, font: &Font, text: &str, options: FontRenderOptions) {
+        if text.is_empty() {
+            return;
+        }
         let surface = font
             .render(text, options.mode)
             .expect("rendering text failed");
