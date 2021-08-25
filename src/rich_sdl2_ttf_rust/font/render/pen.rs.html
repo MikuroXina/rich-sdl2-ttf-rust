@@ -138,6 +138,9 @@
 <span id="136">136</span>
 <span id="137">137</span>
 <span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Extensions for rich-sdl2-rust.</span>
 
@@ -266,6 +269,9 @@
 
 <span class="kw">impl</span> <span class="ident">FontRenderExt</span> <span class="kw">for</span> <span class="ident">Pen</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">font</span>: <span class="kw-2">&amp;</span><span class="ident">Font</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">options</span>: <span class="ident">FontRenderOptions</span>) {
+        <span class="kw">if</span> <span class="ident">text</span>.<span class="ident">is_empty</span>() {
+            <span class="kw">return</span>;
+        }
         <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="ident">font</span>
             .<span class="ident">render</span>(<span class="ident">text</span>, <span class="ident">options</span>.<span class="ident">mode</span>)
             .<span class="ident">expect</span>(<span class="string">&quot;rendering text failed&quot;</span>);
