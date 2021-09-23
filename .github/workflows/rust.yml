@@ -37,17 +37,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --all-features
 
-      - name: Build SDL2 dependency
-        run: |
-          export PREFIX=`pwd`
-          cd SDL2 && ./configure --prefix=$PREFIX && make -j4 && make install
-
-      - name: Build SDL2_ttf dependency
-        run: |
-          export PREFIX=`pwd`
-          export SDL2_DIR=`pwd`/SDL2
-          cd SDL2_ttf && ./configure --prefix=$PREFIX && make -j4
-
       - name: Build
         run: cargo build --verbose
       - name: Run tests
