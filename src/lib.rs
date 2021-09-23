@@ -8,6 +8,8 @@ use rich_sdl2_rust::{Result, Sdl, SdlError, SdlVersion};
 use static_assertions::assert_not_impl_all;
 use std::{cell::Cell, marker::PhantomData, os::raw::c_int};
 
+/// Rust FFI to `SDL_ttf.h`
+#[allow(warnings)]
 mod bind;
 pub mod font;
 pub mod script;
