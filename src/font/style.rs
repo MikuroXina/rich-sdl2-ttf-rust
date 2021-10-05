@@ -1,3 +1,4 @@
+use rich_sdl2_rust::{Result, Sdl, SdlError};
 use std::os::raw::c_int;
 
 use super::{Dpi, Font};
@@ -53,10 +54,10 @@ pub trait StyleExt {
     /// Sets the outline width in pixels.
     fn set_outline_width(&self, pixels: u32);
 
-    /// Sets the font size in points.
-    fn set_font_size(&self, points: u32);
-    /// Sets the font size in points, and dpi.
-    fn set_font_size_dpi(&self, points: u32, dpi: Dpi);
+    /// Sets the font size in points, or `Err` on failure.
+    fn set_font_size(&self, points: u32) -> Result<()>;
+    /// Sets the font size in points and dpi, or `Err` on failure.
+    fn set_font_size_dpi(&self, points: u32, dpi: Dpi) -> Result<()>;
 }
 
 impl StyleExt for Font<'_> {
@@ -83,12 +84,17 @@ impl StyleExt for Font<'_> {
         }
     }
 
-    fn set_font_size(&self, points: u32) {
-        let _ = unsafe { bind::TTF_SetFontSize(self.ptr.as_ptr(), points as _) };
+    fn set_font_size(&self, points: u32) -> Result<()> {
+        let ret = unsafe { bind::TTF_SetFontSize(self.ptr.as_ptr(), points as _) };
+        if ret < 0 {
+            Err(SdlError::Others { msg: Sdl::error() })
+        } else {
+            Ok(())
+        }
     }
 
-    fn set_font_size_dpi(&self, points: u32, dpi: Dpi) {
-        let _ = unsafe {
+    fn set_font_size_dpi(&self, points: u32, dpi: Dpi) -> Result<()> {
+        let ret = unsafe {
             bind::TTF_SetFontSizeDPI(
                 self.ptr.as_ptr(),
                 points as _,
@@ -96,5 +102,10 @@ impl StyleExt for Font<'_> {
                 dpi.vertical as _,
             )
         };
+        if ret < 0 {
+            Err(SdlError::Others { msg: Sdl::error() })
+        } else {
+            Ok(())
+        }
     }
 }
