@@ -1,6 +1,6 @@
 [package]
 name = "rich-sdl2-ttf-rust"
-version = "0.5.0"
+version = "0.6.0"
 authors = ["MikuroXina <ryosukadnak@gmail.com>"]
 edition = "2018"
 description = "The sdl_ttf 2.0 wrapper for Rust."
@@ -10,12 +10,19 @@ license = "Apache-2.0"
 keywords = ["sdl2", "wrapper", "binding"]
 categories = ["graphics", "rendering"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[package.metadata.vcpkg]
+dependencies = ["sdl2-ttf"]
+git = "https://github.com/microsoft/vcpkg"
+rev = "5568f110b509a9fd90711978a7cb76bae75bb092"
+
+[package.metadata.vcpkg.target]
+x86_64-pc-windows-msvc = { triplet = "x64-windows-static-md" }
 
 [dependencies]
-rich-sdl2-rust = "0.7.2"
+rich-sdl2-rust = "0.8.0"
 static_assertions = "1.1.0"
 
 [build-dependencies]
 bindgen = "0.59.1"
 git2 = "0.13.21"
+vcpkg = "0.2.15"

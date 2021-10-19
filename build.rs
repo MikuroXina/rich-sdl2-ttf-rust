@@ -1,74 +1,65 @@
+use std::{env, path::PathBuf};
+
 fn main() {
-    use git2::Repository;
-    use std::env;
-    use std::path::PathBuf;
-    use std::process;
+    let sdl2_ttf = vcpkg::Config::new()
+        .emit_includes(true)
+        .find_package("sdl2-ttf")
+        .unwrap();
+    eprintln!("{:?}", sdl2_ttf.include_paths);
+    let includes: Vec<_> = sdl2_ttf
+        .include_paths
+        .into_iter()
+        .map(|path| format!("-I{}", path.display()))
+        .collect();
 
-    let root_dir = env::var("OUT_DIR").expect("OUT_DIR not found");
-    let root = PathBuf::from(&root_dir);
+    let target = env::var("TARGET").expect("Cargo build scripts always have TARGET");
+    let target_os = target.splitn(3, '-').nth(2).unwrap();
+    set_link(target_os);
 
-    let sdl_dir = root.join("SDL2");
-    let _ = Repository::clone("https://github.com/libsdl-org/SDL", &sdl_dir);
-    let _ = process::Command::new("./configure")
-        .arg(format!("--prefix={}", root_dir))
-        .current_dir(&sdl_dir)
-        .output()
-        .expect("failed to configure");
-    let _ = process::Command::new("make")
-        .arg("-j4")
-        .current_dir(&sdl_dir)
-        .output()
-        .expect("failed to make");
-    let _ = process::Command::new("make")
-        .arg("install")
-        .current_dir(&sdl_dir)
-        .output()
-        .expect("failed to install");
-
-    let sdl_ttf_dir = root.join("SDL2_ttf");
-    let _ = Repository::clone("https://github.com/libsdl-org/SDL_ttf", &sdl_ttf_dir);
-    let _ = process::Command::new("./configure")
-        .arg(format!("--prefix={}", root_dir))
-        .current_dir(&sdl_ttf_dir)
-        .env("SDL2_DIR", &sdl_dir)
-        .output()
-        .expect("failed to configure");
-    let _ = process::Command::new("make")
-        .arg("-j4")
-        .current_dir(&sdl_ttf_dir)
-        .output()
-        .expect("failed to make");
-
-    println!("cargo:rustc-link-lib=SDL2");
-    println!("cargo:rustc-link-lib=SDL2_ttf");
-    println!(
-        "cargo:rustc-link-search={}",
-        root.join("SDL2/build/.libs").as_path().to_string_lossy()
-    );
-    println!(
-        "cargo:rustc-link-search={}",
-        root.join("SDL2_ttf/.libs").as_path().to_string_lossy()
-    );
-    println!(
-        "cargo:rustc-link-search={}",
-        root.join("lib").as_path().to_string_lossy()
-    );
     println!("cargo:rerun-if-changed=wrapper.h");
 
     let bindings = bindgen::Builder::default()
         .header("wrapper.h")
-        .clang_arg(&format!("-I{}/SDL2/include", root_dir))
-        .clang_arg(&format!("-I{}/SDL2_ttf", root_dir))
+        .clang_args(&includes)
         .allowlist_function("TTF_.*")
-        .allowlist_function("SDL_FreeSurface")
         .allowlist_type("TTF_.*")
         .allowlist_var("TTF_.*")
         .generate_comments(false)
+        .prepend_enum_name(false)
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
         .generate()
         .expect("bindgen builder was invalid");
 
+    let root_dir = env::var("OUT_DIR").expect("OUT_DIR not found");
+    let root = PathBuf::from(root_dir);
     bindings
         .write_to_file(root.join("bind.rs"))
-        .expect("`src` directory not found");
+        .expect("writing `bind.rs` failed");
+}
+
+fn set_link(target_os: &str) {
+    if target_os.contains("windows") {
+        println!("cargo:rustc-link-lib=shell32");
+        println!("cargo:rustc-link-lib=user32");
+        println!("cargo:rustc-link-lib=gdi32");
+        println!("cargo:rustc-link-lib=winmm");
+        println!("cargo:rustc-link-lib=imm32");
+        println!("cargo:rustc-link-lib=ole32");
+        println!("cargo:rustc-link-lib=oleaut32");
+        println!("cargo:rustc-link-lib=version");
+        println!("cargo:rustc-link-lib=uuid");
+        println!("cargo:rustc-link-lib=dinput8");
+        println!("cargo:rustc-link-lib=dxguid");
+        println!("cargo:rustc-link-lib=setupapi");
+    } else if target_os == "darwin" {
+        println!("cargo:rustc-link-lib=framework=Cocoa");
+        println!("cargo:rustc-link-lib=framework=IOKit");
+        println!("cargo:rustc-link-lib=framework=Carbon");
+        println!("cargo:rustc-link-lib=framework=ForceFeedback");
+        println!("cargo:rustc-link-lib=framework=CoreVideo");
+        println!("cargo:rustc-link-lib=framework=CoreAudio");
+        println!("cargo:rustc-link-lib=framework=AudioToolbox");
+        println!("cargo:rustc-link-lib=framework=Metal");
+        println!("cargo:rustc-link-lib=iconv");
+    }
 }
