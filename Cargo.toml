@@ -24,5 +24,4 @@ static_assertions = "1.1.0"
 
 [build-dependencies]
 bindgen = "0.59.1"
-git2 = "0.13.21"
 vcpkg = "0.2.15"
