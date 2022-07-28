@@ -1,6 +1,6 @@
 [package]
 name = "rich-sdl2-ttf-rust"
-version = "0.8.0"
+version = "0.9.0"
 authors = ["MikuroXina <ryosukadnak@gmail.com>"]
 edition = "2021"
 description = "The sdl_ttf 2.0 wrapper for Rust."
@@ -19,4 +19,4 @@ static_assertions = "1.1.0"
 
 [build-dependencies]
 bindgen = "0.59.1"
-git2 = "0.13.21"
+git2 = "0.14.3"
