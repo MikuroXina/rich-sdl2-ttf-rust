@@ -24,3 +24,4 @@ static_assertions = "1.1.0"
 [build-dependencies]
 bindgen = "0.59.1"
 git2 = "0.14.3"
+pkg-config = "0.3.25"
